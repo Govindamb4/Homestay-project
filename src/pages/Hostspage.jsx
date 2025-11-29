@@ -1,101 +1,108 @@
 // src/pages/HostsPage.jsx
-import React, { useMemo } from "react";
-import { Link } from "react-router-dom";
-import { listings } from "../data/sampleData";
-
-/**
- * HostsPage
- * - Extracts host names from listings via the `host` field.
- * - Removes duplicates and groups listings by host name.
- * - Displays each host and a grid of their homestays.
- */
+import React from "react";
 
 export default function HostsPage() {
-  // Group listings by host name (normalize by trimming)
-  const hostsGrouped = useMemo(() => {
-    const map = new Map();
+  const tools = [
+    {
+      title: "Listing Manager",
+      text: "Create new homestays, update photos, amenities and house rules.",
+    },
+    {
+      title: "Pricing & Offers",
+      text: "Set dynamic pricing, weekend rates and custom coupons for students.",
+    },
+    {
+      title: "Booking Calendar",
+      text: "See upcoming bookings in a calendar view and block unavailable dates.",
+    },
+    {
+      title: "Reviews & Ratings",
+      text: "Respond to guest reviews and improve your visibility on the platform.",
+    },
+  ];
 
-    (Array.isArray(listings) ? listings : []).forEach((lst) => {
-      const rawHost = lst.host ?? lst.hostName ?? "";
-      const hostName = String(rawHost).trim();
-      if (!hostName) return; // skip listings without host name
-
-      if (!map.has(hostName)) map.set(hostName, []);
-      map.get(hostName).push(lst);
-    });
-
-    // convert to array of { name, listings } sorted by number of listings desc
-    const arr = Array.from(map.entries()).map(([name, items]) => ({ name, listings: items }));
-    arr.sort((a, b) => b.listings.length - a.listings.length);
-    return arr;
-  }, []);
+  const perks = [
+    "No coding needed — fully managed platform",
+    "Detailed analytics for views, bookings and payouts",
+    "Support team to help with disputes and cancellations",
+    "Higher boost for well-rated, responsive hosts",
+  ];
 
   return (
-    <section className="py-5">
+    <section
+      style={{
+        minHeight: "100vh",
+        background:
+          "radial-gradient(circle at top, #020617, #020617 40%, #020c1b 100%)",
+        paddingTop: "90px",
+        paddingBottom: "60px",
+      }}
+    >
       <div className="container">
-        <h2 className="text-center mb-2">Hosts (from listings)</h2>
-        <p className="text-center text-muted mb-4">
-          Showing <strong>{hostsGrouped.length}</strong> hosts derived from listings.
+        <h2
+          className="mb-2"
+          style={{ color: "#f9fafb", fontWeight: 800, letterSpacing: "0.5px" }}
+        >
+          Host Dashboard
+        </h2>
+        <p style={{ color: "#9ca3af", maxWidth: "640px" }}>
+          Turn your home, apartment or spare room into a smart income source.
+          Homestay Explorer gives you all the tools to manage listings, prices
+          and guests — in one simple dashboard.
         </p>
 
-        {hostsGrouped.length === 0 ? (
-          <div className="alert alert-warning text-center">
-            No hosts found in listings. Make sure each listing has a <code>host</code> field.
-          </div>
-        ) : (
-          <div className="row">
-            {hostsGrouped.map((host) => (
-              <div className="col-12 mb-4" key={host.name}>
-                <div className="card">
-                  <div className="card-body">
-                    <div className="d-flex justify-content-between align-items-start mb-3">
-                      <div>
-                        <h5 className="mb-1">{host.name}</h5>
-                        <div className="text-muted small">Homestays: <strong>{host.listings.length}</strong></div>
-                      </div>
-
-                      <div className="text-end">
-                        {/* optional: if you have host profile route by name or id, change this link */}
-                        <Link to={`/hosts`} className="btn btn-outline-primary btn-sm">
-                          View All
-                        </Link>
-                      </div>
-                    </div>
-
-                    <div className="row">
-                      {host.listings.map((lst) => (
-                        <div className="col-md-4 mb-3" key={lst.id ?? `${host.name}-${Math.random()}`}>
-                          <div className="card h-100">
-                            {lst.image && (
-                              <img
-                                src={lst.image}
-                                alt={lst.title ?? "homestay"}
-                                className="card-img-top"
-                                style={{ objectFit: "cover", height: 150 }}
-                              />
-                            )}
-                            <div className="card-body">
-                              <h6 className="card-title">{lst.title ?? "Untitled"}</h6>
-                              {lst.location && <p className="card-text small mb-1"><strong>Location:</strong> {lst.location}</p>}
-                              {lst.price !== undefined && <p className="card-text small mb-1"><strong>Price:</strong> ₹{lst.price}</p>}
-                              {lst.rating !== undefined && <p className="card-text small mb-1"><strong>Rating:</strong> {lst.rating} ⭐</p>}
-                              {lst.id && (
-                                <Link to={`/listing/${lst.id}`} className="btn btn-sm btn-primary">
-                                  View Homestay
-                                </Link>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                  </div>
-                </div>
+        <div className="row g-4 mt-4">
+          {tools.map((tool, i) => (
+            <div key={i} className="col-md-6">
+              <div
+                style={{
+                  borderRadius: "18px",
+                  background: "rgba(15,23,42,0.96)",
+                  border: "1px solid rgba(34,197,94,0.6)",
+                  padding: "18px 18px 12px",
+                  color: "#e5e7eb",
+                  height: "100%",
+                }}
+              >
+                <h5 className="mb-2" style={{ color: "#4ade80" }}>
+                  {tool.title}
+                </h5>
+                <p style={{ fontSize: "0.9rem", marginBottom: 0 }}>
+                  {tool.text}
+                </p>
               </div>
+            </div>
+          ))}
+        </div>
+
+        <div
+          className="mt-4"
+          style={{
+            borderRadius: "20px",
+            background:
+              "linear-gradient(135deg,rgba(16,185,129,0.2),rgba(8,47,73,0.95))",
+            border: "1px solid rgba(34,197,94,0.9)",
+            padding: "18px 18px 14px",
+            color: "#e5e7eb",
+          }}
+        >
+          <h4 className="mb-2" style={{ fontWeight: 600 }}>
+            Why host with Homestay Explorer?
+          </h4>
+          <ul
+            style={{
+              paddingLeft: "1.1rem",
+              marginBottom: 0,
+              fontSize: "0.9rem",
+            }}
+          >
+            {perks.map((p, i) => (
+              <li key={i} className="mb-1">
+                {p}
+              </li>
             ))}
-          </div>
-        )}
+          </ul>
+        </div>
       </div>
     </section>
   );
