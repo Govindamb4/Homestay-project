@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import logo from "../assets/logo.png";
 
 export default function Navbar() {
   const active = ({ isActive }) => isActive ? "nav-link text-info" : "nav-link";
